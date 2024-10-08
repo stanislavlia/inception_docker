@@ -1,7 +1,13 @@
 version: '3.8'
 
 services:
-  mariadb:
+  mariadb: 
+
+    #DEBUG commands:
+    # docker exec -it mariadb bash
+    # > mysql -u stanislavlia42 -p
+
+
     image:  mariadb:prod
     container_name: mariadb
     build:
