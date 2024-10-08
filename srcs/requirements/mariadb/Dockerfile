@@ -12,6 +12,8 @@ COPY tools/db-setup.sh db-setup.sh
 # make it executable
 RUN chmod +x db-setup.sh
 
+# make it stoppable
+STOPSIGNAL SIGQUIT 
 
 ENTRYPOINT [ "sh", "./db-setup.sh" ]
 
