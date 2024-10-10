@@ -2,8 +2,8 @@ FROM debian:stable-20240926
 
 WORKDIR /
 
+#to make it stoppable
 STOPSIGNAL SIGQUIT 
-
 
 RUN apt-get -y update &&\
     apt-get install -y php-fpm  php-mysql curl procps vim
@@ -33,6 +33,7 @@ RUN wp core download --allow-root
 
 #rename sample
 RUN mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+
 
 
 COPY ./tools/setup-wp.sh /setup-wp.sh
