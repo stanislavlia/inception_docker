@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Replace placeholders with actual DB creds
 sed  -i -r "s/database_name_here/wordpress/1" wp-config.php
 sed  -i -r "s/username_here/$MARIADB_ADMIN_LOGIN/1" wp-config.php
