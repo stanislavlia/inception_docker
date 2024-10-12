@@ -17,6 +17,4 @@ wp core install --url=$DOMAIN_NAME --title=$WP_TITLE \
 
 
 #install different Wordpress themes
-wp theme install generatepress --activate --allow-root
 wp theme install oceanwp --activate --allow-root
-wp theme install neve --activate --allow-root
