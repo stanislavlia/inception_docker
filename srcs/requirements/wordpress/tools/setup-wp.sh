@@ -9,8 +9,6 @@ sed  -i -r "s/password_here/$MARIADB_ADMIN_PASSWORD/1" wp-config.php
 sed  -i -r "s/localhost/mariadb/1" wp-config.php
 
 
-cat wp-config.php
-
 #Install & setup Wordpress
 wp core install --url=$DOMAIN_NAME --title=$WP_TITLE \
                 --admin_user=$WP_ADMIN_LOGIN --admin_password=$WP_ADMIN_PASSWORD \
@@ -22,8 +20,7 @@ wp core install --url=$DOMAIN_NAME --title=$WP_TITLE \
 wp theme install oceanwp --activate --allow-root
 
 #List available php-fpm installation
-ls /usr/sbin/php*
 
-
+echo "Starting php-fpm server on port 9000"
 #Run FPM server
 exec /usr/sbin/php-fpm8.2 -F 

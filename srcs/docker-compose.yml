@@ -46,8 +46,11 @@ services:
       dockerfile: ./Dockerfile
     env_file:
       - .env
+    
+
     networks:
       - inception
+
     depends_on:
       mariadb:
         condition: service_healthy
