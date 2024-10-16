@@ -28,4 +28,4 @@ service mariadb stop
 
 # Start MariaDB in safe mode and keep it running in the foreground
 echo "Starting MariaDB in safe mode (foreground)..."
-exec mysqld_safe --skip-grant-tables
+exec mysqld_safe 
