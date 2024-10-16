@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Replace placeholders with actual DB creds
+sleep 5 #wait for db
+
 sed  -i -r "s/database_name_here/wordpress/1" wp-config.php
 sed  -i -r "s/username_here/$MARIADB_ADMIN_LOGIN/1" wp-config.php
 sed  -i -r "s/password_here/$MARIADB_ADMIN_PASSWORD/1" wp-config.php
@@ -18,3 +20,5 @@ wp core install --url=$DOMAIN_NAME --title=$WP_TITLE \
 
 #install different Wordpress themes
 wp theme install oceanwp --activate --allow-root
+
+exec php-fpm -F
