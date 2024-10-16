@@ -5,8 +5,8 @@ WORKDIR /
 #to make it stoppable
 STOPSIGNAL SIGQUIT 
 
-RUN apt-get -y update &&\
-    apt-get install -y php-fpm  php-mysql curl procps vim
+RUN apt-get -y update && apt-get install -y php8.2 php8.2-fpm php8.2-mysql procps vim curl 
+
 
 
 #create default folders for serving content
@@ -33,6 +33,7 @@ RUN wp core download --allow-root
 
 #rename sample
 RUN mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+
 
 
 

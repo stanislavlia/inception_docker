@@ -21,4 +21,9 @@ wp core install --url=$DOMAIN_NAME --title=$WP_TITLE \
 #install different Wordpress themes
 wp theme install oceanwp --activate --allow-root
 
-exec php-fpm -F
+#List available php-fpm installation
+ls /usr/sbin/php*
+
+
+#Run FPM server
+exec /usr/sbin/php-fpm8.2 -F 
