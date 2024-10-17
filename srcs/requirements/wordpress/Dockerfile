@@ -5,8 +5,12 @@ WORKDIR /
 #to make it stoppable
 STOPSIGNAL SIGQUIT 
 
-RUN apt-get -y update && apt-get install -y php8.2 php8.2-fpm php8.2-mysql procps vim curl 
+RUN apt-get -y update && apt-get install -y php8.2 php8.2-fpm php8.2-mysql procps vim curl net-tools
 
+
+RUN sed -i "s|listen = /run/php/php8.2-fpm.sock|listen = 9000|g" /etc/php/8.2/fpm/pool.d/www.conf && \
+    sed -i "s|;listen.owner = www-data|listen.owner = www-data|g" /etc/php/8.2/fpm/pool.d/www.conf && \
+    sed -i "s|;listen.group = www-data|listen.group = www-data|g" /etc/php/8.2/fpm/pool.d/www.conf
 
 
 #create default folders for serving content

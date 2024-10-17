@@ -46,15 +46,24 @@ services:
       dockerfile: ./Dockerfile
     env_file:
       - .env
-    
-
     networks:
       - inception
 
     depends_on:
       mariadb:
         condition: service_healthy
-    
+
+  nginx:
+    image: nginx:latest # Pull from Dockerhub for now
+    container_name: nginx
+    depends_on:
+      - wordpress
+    ports:
+      - "8011:80"  # Expose Nginx on port 80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Use a custom Nginx config
+    networks:
+      - inception
     
 networks:
   inception:
