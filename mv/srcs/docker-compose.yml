@@ -1,0 +1,142 @@
+version: '3.8' # Using version 3.8 to support Docker secrets
+
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - wordpress_files:/var/www/html
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+    networks:
+      - web
+
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+    secrets:
+      - db_root_password
+      - db_password
+    volumes:
+      - wordpress_data:/var/lib/mysql
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      WP_URL: "https://localhost" # ?
+      WP_ADMIN_USER: "admin"
+      WP_ADMIN_EMAIL: "admin@example.com"
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_auth_key
+      - wp_secure_auth_key
+      - wp_logged_in_key
+      - wp_nonce_key
+      - wp_auth_salt
+      - wp_secure_auth_salt
+      - wp_logged_in_salt
+      - wp_nonce_salt
+    volumes:
+      - wordpress_files:/var/www/html
+    networks:
+      - web
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  redis:   # Bonus: Redis cache
+    build:
+      context: ./requirements/redis
+      dockerfile: Dockerfile
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - web
+
+  ftp:     # Bonus: FTP server
+    build:
+      context: ./requirements/ftp
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - wordpress_files:/var/www/html
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110" # for passive mode, TODO: need to think: should I open this ports?
+    secrets:
+    - ftp_password
+    networks:
+      - web
+    depends_on:
+      - wordpress
+
+  adminer:  # Bonus: Adminer
+    build:
+      context: ./requirements/adminer
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - web
+    depends_on:
+      - mariadb
+
+networks:
+  web:
+
+volumes:
+  wordpress_data:
+  wordpress_files:
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_auth_key:
+    file: ../secrets/wp_auth_key.txt
+  wp_secure_auth_key:
+    file: ../secrets/wp_secure_auth_key.txt
+  wp_logged_in_key:
+    file: ../secrets/wp_logged_in_key.txt
+  wp_nonce_key:
+    file: ../secrets/wp_nonce_key.txt
+  wp_auth_salt:
+    file: ../secrets/wp_auth_salt.txt
+  wp_secure_auth_salt:
+    file: ../secrets/wp_secure_auth_salt.txt
+  wp_logged_in_salt:
+    file: ../secrets/wp_logged_in_salt.txt
+  wp_nonce_salt:
+    file: ../secrets/wp_nonce_salt.txt
+  ftp_password:
+    file: ../secrets/ftp_password.txt
