@@ -1,15 +1,24 @@
-# Dockerfile for Adminer based on Alpine
+# Start with a minimal Alpine image
 FROM alpine:3.14
 
-# Install PHP, curl, and necessary extensions
-RUN apk update && apk add --no-cache php7 php7-json php7-session php7-mysqli curl
+# Install PHP and necessary extensions
+RUN apk update && apk add --no-cache \
+    php7 \
+    php7-json \
+    php7-session \
+    php7-mysqli \
+    php7-pdo_mysql \
+    php7-mbstring \
+    php7-iconv \
+    php7-openssl \
+    php7-curl \
+    curl
 
-# Download Adminer
 RUN mkdir -p /var/www/html && \
-    curl -o /var/www/html/index.php https://www.adminer.org/latest.php
+    curl -L https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php -o /var/www/html/index.php
 
-# Expose the necessary port for internal Docker network only (no external binding)
+# Expose the Adminer port
 EXPOSE 8080
 
-# Start PHP server for Adminer
-CMD ["php", "-S", "127.0.0.1:8080", "-t", "/var/www/html"]
+# Start PHP's built-in web server
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]

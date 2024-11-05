@@ -113,6 +113,8 @@ services:
       context: ./requirements/adminer
       dockerfile: Dockerfile
     restart: always
+    ports:
+      - "8080:8080"
     networks:
       - web
     depends_on:
