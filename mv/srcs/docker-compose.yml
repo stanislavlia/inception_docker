@@ -19,9 +19,8 @@ services:
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      # MYSQL_USER: ${MYSQL_USER}
+    env_file:
+      - ".env"
     secrets:
       - db_user
       - db_root_password
@@ -41,11 +40,9 @@ services:
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      WP_URL: "https://localhost" # ?
-      WP_ADMIN_USER: "admin"
-      WP_ADMIN_EMAIL: "admin@example.com"
+    env_file:
+      - ".env"
+      
     secrets:
       - db_user
       - db_password
