@@ -2,7 +2,10 @@ version: '3.8' # Using version 3.8 to support Docker secrets
 
 services:
   nginx:
+    container_name: nginx
+    image: nginx
     build:
+      
       context: ./requirements/nginx
       dockerfile: Dockerfile
     restart: always
@@ -16,6 +19,8 @@ services:
       - web
 
   mariadb:
+    container_name: mariadb
+    image: mariadb
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
@@ -37,12 +42,13 @@ services:
       timeout: 5s
 
   wordpress:
+    container_name: wordpress
+    image: wordpress
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     env_file:
       - ".env"
-      
     secrets:
       - db_user
       - db_password
@@ -66,6 +72,8 @@ services:
         condition: service_healthy
 
   redis:   # Bonus: Redis cache
+    container_name: redis
+    image: redis
     build:
       context: ./requirements/redis
       dockerfile: Dockerfile
@@ -80,6 +88,8 @@ services:
       - web
 
   ftp:     # Bonus: FTP server
+    container_name: ftp
+    image: ftp
     build:
       context: ./requirements/ftp
       dockerfile: Dockerfile
@@ -90,13 +100,15 @@ services:
       - "21:21"
       - "21100-21110:21100-21110" # for passive mode, TODO: need to think: should I open this ports?
     secrets:
-    - ftp_password
+      - ftp_password
     networks:
       - web
     depends_on:
       - wordpress
 
   adminer:  # Bonus: Adminer
+    container_name: adminer
+    image: adminer
     build:
       context: ./requirements/adminer
       dockerfile: Dockerfile
@@ -108,6 +120,8 @@ services:
 
 networks:
   web:
+    driver: bridge
+    name: inception_network
 
 volumes:
   wordpress_data:
