@@ -8,4 +8,4 @@
 4) Configure certificates to use custom organization and other info
 5) Change credentials to more complicated ones
 6) Change wordpress and MariaDB volume path to /home/sliashko/data/
-
+7) Find out why i can login to db_user without password (inside mariadb container) + why wordpress_db not shown.
