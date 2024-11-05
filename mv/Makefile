@@ -18,7 +18,6 @@ logs:
 # Command to clean up all stopped containers and volumes
 clean:
 	docker-compose -f srcs/docker-compose.yml --env-file $(ENV_FILE) down -v
-	docker system prune -f
 	docker volume prune -f
 
 # Command to rebuild images without using cache

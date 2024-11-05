@@ -3,7 +3,7 @@
 # Wait until the database is ready
 echo "Waiting for MariaDB to be ready..."
 for i in {30..0}; do
-    if mysqladmin ping -h mariadb -u"${MYSQL_USER}" -p"$(cat /run/secrets/db_password)" --silent; then
+    if mysqladmin ping -h mariadb -u"$(cat /run/secrets/db_user)" -p"$(cat /run/secrets/db_password)" --silent; then
         break
     fi
     echo 'MariaDB is unavailable - sleeping'
@@ -16,7 +16,7 @@ fi
 
 # Debugging: Check database variables
 echo "Database Name: ${MYSQL_DATABASE}"
-echo "Database User: ${MYSQL_USER}"
+echo "Database User: $(cat /run/secrets/db_user)"
 echo "Database Password: $(cat /run/secrets/db_password)"
 echo "Database Host: mariadb"
 
@@ -38,7 +38,7 @@ fi
 if [ ! -f wp-config.php ]; then
   wp config create --allow-root \
     --dbname=${MYSQL_DATABASE} \
-    --dbuser=${MYSQL_USER} \
+    --dbuser=$(cat /run/secrets/db_user) \
     --dbpass=$(cat /run/secrets/db_password) \
     --dbhost=mariadb
 fi

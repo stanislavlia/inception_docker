@@ -43,7 +43,6 @@ services:
       dockerfile: Dockerfile
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      # MYSQL_USER: ${MYSQL_USER}
       WP_URL: "https://localhost" # ?
       WP_ADMIN_USER: "admin"
       WP_ADMIN_EMAIL: "admin@example.com"

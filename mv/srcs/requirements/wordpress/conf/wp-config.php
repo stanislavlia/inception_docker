@@ -1,7 +1,7 @@
 <?php
 
 define('DB_NAME', isset($_ENV['MYSQL_DATABASE']) ? $_ENV['MYSQL_DATABASE'] : 'wordpress_db');
-define('DB_USER', isset($_ENV['MYSQL_USER']) ? $_ENV['MYSQL_USER'] : 'wordpress_user');
+define('DB_USER', trim(file_get_contents('/run/secrets/db_user')));
 define('DB_PASSWORD', trim(file_get_contents('/run/secrets/db_password')));
 define('DB_HOST', 'mariadb:3306');
 
