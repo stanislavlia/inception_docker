@@ -11,7 +11,7 @@ services:
       - ".env"
     restart: always
     volumes:
-      - wordpress_files:/var/www/html
+      - wordpress:/var/www/html
     ports:
       - "443:443"
     depends_on:
@@ -32,7 +32,7 @@ services:
       - db_root_password
       - db_password
     volumes:
-      - wordpress_data:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     networks:
       - web
     healthcheck:
@@ -63,7 +63,7 @@ services:
       - wp_logged_in_salt
       - wp_nonce_salt
     volumes:
-      - wordpress_files:/var/www/html
+      - wordpress:/var/www/html
     networks:
       - web
     depends_on:
@@ -96,7 +96,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - wordpress_files:/var/www/html
+      - wordpress:/var/www/html
     ports:
       - "21:21"
       - "21100-21110:21100-21110" # for passive mode, TODO: need to think: should I open this ports?
@@ -126,9 +126,24 @@ networks:
     driver: bridge
     name: inception_network
 
+
 volumes:
-  wordpress_data:
-  wordpress_files:
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      device: ${HOME}/data/wordpress
+      o: bind
+      type: none
+
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      device: ${HOME}/data/wordpress
+      o: bind
+      type: none
+
 
 secrets:
   db_user:
